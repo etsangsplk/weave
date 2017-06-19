@@ -81,6 +81,29 @@ func addMyselfToPeerList(c *kubernetes.Clientset, peerName, name string) (*peerL
 // Kubernetes, remove it from Weave IPAM
 func reclaimRemovedPeers(apl *peerList, nodes []nodeInfo) error {
 	// TODO
+	// Outline of function:
+	// 1. Compare peers stored in the peerList against all peers reported by k8s now.
+	// 2. Any in the first set and not in the second, we should remove
+	// 3. Check if there is an existing annotation with key X
+	// 4.   If annotation already contains my identity, ok;
+	// 5.   If non-existent, write an annotation with key X and contents "my identity"
+	// 6.   If step 4 or 5 succeeded, rmpeer X
+	// 7a.    Remove X from peerList
+	// 7b.    Remove annotation with key X
+	// 8.   If step 5 failed due to optimistic lock conflict, stop: someone else is handling X
+	// 9.   Else there is an existing annotation at step 3; call its owner peer Y.
+	// 10.    If Y is not known to k8s and marked unreachable, recurse to remove Y at 3
+	// 11.      If we succeed to claim the annotation for Y, remove its annotation for X too
+	// 12.      Then return to step 3 to claim X again
+
+	// Step 3-5 is to protect against two simultaneous rmpeers of X
+	// Step 4 is to pick up again after a restart between step 5 and step 7b
+	// Step 10 is to clean up if the peer doing the reclaim disappears between steps 5 and 7a
+	// If peer doing the reclaim disappears forever between 7a and 7b then we get a dangling annotation
+	// This should be sufficiently rare that we don't care.
+
+	// Question: Should we check against Weave Net IPAM?
+	// i.e. If peer X owns any address space and is marked unreachable, we want to rmpeer X
 	return nil
 }
 

@@ -3,7 +3,6 @@ package npc
 import (
 	"encoding/json"
 
-	"github.com/coreos/go-iptables/iptables"
 	"k8s.io/client-go/pkg/api/unversioned"
 	coreapi "k8s.io/client-go/pkg/api/v1"
 	extnapi "k8s.io/client-go/pkg/apis/extensions/v1beta1"
@@ -15,8 +14,8 @@ import (
 )
 
 type ns struct {
-	ipt *iptables.IPTables // interface to iptables
-	ips ipset.Interface    // interface to ipset
+	ipt common.IPTables // interface to iptables
+	ips ipset.Interface // interface to ipset
 
 	name      string                               // k8s Namespace name
 	nodeName  string                               // my node name
@@ -32,7 +31,7 @@ type ns struct {
 	rules        *ruleSet
 }
 
-func newNS(name, nodeName string, ipt *iptables.IPTables, ips ipset.Interface, nsSelectors *selectorSet) (*ns, error) {
+func newNS(name, nodeName string, ipt common.IPTables, ips ipset.Interface, nsSelectors *selectorSet) (*ns, error) {
 	allPods, err := newSelectorSpec(&unversioned.LabelSelector{}, name, ipset.HashIP)
 	if err != nil {
 		return nil, err

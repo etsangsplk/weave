@@ -156,12 +156,17 @@ func TestRegressionPolicyNamespaceOrdering3059(t *testing.T) {
 	m := newMockIPSet()
 	controller := New("foo", &mockIPTables{}, &m)
 
+	const (
+		selectorIPSetName = "weave-I239Zp%sCvoVt*D6u=A!2]YEk"
+		sourceIPSetName   = "weave-HboJG1fGgG]/SR%k9H#hv5e96"
+	)
+
 	controller.AddNamespace(sourceNamespace)
 	controller.AddNamespace(destinationNamespace)
 
 	controller.AddNetworkPolicy(networkPolicy)
 
-	require.Equal(t, true, m.sets["weave-I239Zp%sCvoVt*D6u=A!2]YEk"].subSets["weave-HboJG1fGgG]/SR%k9H#hv5e96"])
+	require.Equal(t, true, m.sets[selectorIPSetName].subSets[sourceIPSetName])
 
 	// NetworkPolicy first
 	m = newMockIPSet()
@@ -172,6 +177,6 @@ func TestRegressionPolicyNamespaceOrdering3059(t *testing.T) {
 	controller.AddNamespace(sourceNamespace)
 	controller.AddNamespace(destinationNamespace)
 
-	require.Equal(t, true, m.sets["weave-I239Zp%sCvoVt*D6u=A!2]YEk"].subSets["weave-HboJG1fGgG]/SR%k9H#hv5e96"])
+	require.Equal(t, true, m.sets[selectorIPSetName].subSets[sourceIPSetName])
 
 }

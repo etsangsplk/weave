@@ -1,4 +1,4 @@
-package common
+package iptables
 
 type IPTables interface {
 	Append(table, chain string, rulespec ...string) error

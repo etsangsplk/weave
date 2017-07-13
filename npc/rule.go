@@ -6,6 +6,7 @@ import (
 	"k8s.io/client-go/pkg/types"
 
 	"github.com/weaveworks/weave/common"
+	"github.com/weaveworks/weave/npc/iptables"
 )
 
 type ruleSpec struct {
@@ -34,11 +35,11 @@ func newRuleSpec(proto *string, srcHost *selectorSpec, dstHost *selectorSpec, ds
 }
 
 type ruleSet struct {
-	ipt   common.IPTables
+	ipt   iptables.IPTables
 	users map[string]map[types.UID]struct{}
 }
 
-func newRuleSet(ipt common.IPTables) *ruleSet {
+func newRuleSet(ipt iptables.IPTables) *ruleSet {
 	return &ruleSet{ipt, make(map[string]map[types.UID]struct{})}
 }
 

@@ -9,6 +9,7 @@ import (
 
 	"github.com/weaveworks/weave/common"
 	"github.com/weaveworks/weave/npc/ipset"
+	"github.com/weaveworks/weave/npc/iptables"
 )
 
 type NetworkPolicyController interface {
@@ -30,14 +31,14 @@ type controller struct {
 
 	nodeName string // my node name
 
-	ipt common.IPTables
+	ipt iptables.IPTables
 	ips ipset.Interface
 
 	nss         map[string]*ns // ns name -> ns struct
 	nsSelectors *selectorSet   // selector string -> nsSelector
 }
 
-func New(nodeName string, ipt common.IPTables, ips ipset.Interface) NetworkPolicyController {
+func New(nodeName string, ipt iptables.IPTables, ips ipset.Interface) NetworkPolicyController {
 	c := &controller{
 		nodeName: nodeName,
 		ipt:      ipt,

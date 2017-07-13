@@ -15,8 +15,8 @@ import (
 )
 
 type ns struct {
-	ipt iptables.IPTables // interface to iptables
-	ips ipset.Interface   // interface to ipset
+	ipt iptables.Interface // interface to iptables
+	ips ipset.Interface    // interface to ipset
 
 	name      string                               // k8s Namespace name
 	nodeName  string                               // my node name
@@ -32,7 +32,7 @@ type ns struct {
 	rules        *ruleSet
 }
 
-func newNS(name, nodeName string, ipt iptables.IPTables, ips ipset.Interface, nsSelectors *selectorSet) (*ns, error) {
+func newNS(name, nodeName string, ipt iptables.Interface, ips ipset.Interface, nsSelectors *selectorSet) (*ns, error) {
 	allPods, err := newSelectorSpec(&unversioned.LabelSelector{}, name, ipset.HashIP)
 	if err != nil {
 		return nil, err
